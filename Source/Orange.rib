@@ -1,0 +1,142 @@
+# Author - Tom Weaver
+#
+# Orange.rib
+
+
+Display "Orange" "it" "rgba"								#Output image called "Orange" to the "it" viewer
+Option "searchpath" "string shader"  ["./shaders:.:@"]		#path to look for shaders
+Option "searchpath" "string texture" ["./textures:.:@"]		#path to look for textures
+Hider "raytrace" "int incremental" 0 "int minsamples" 8 "int maxsamples" 86
+
+
+#sFormat 1920 1080 1											#Size of the rendered image
+Format 960 540 1											#Size of the rendered image
+PixelSamples 3 3  											#Level of anti-aliasing
+ShadingRate .1											#Space between shader evaluations across the surface
+
+
+
+
+#Camera Options Begin
+Clipping 0.4 1200											#The clipping plane
+Projection "perspective" "float fov" 20						#The projection type and field of view
+ConcatTransform[1 0 0 0 					
+				0 0 1 0 	
+				0 1 0 0
+				0 0 0 1] 									#The camera location
+Translate 0 20 -1											#Translate camera
+Rotate 90 1 0 0												#Rotate camera
+Rotate 90 0 1 0												#Rotate camera
+Rotate 20 0 0 1											#Rotate camera
+###Camera Options End
+
+WorldBegin
+	TransformBegin #LightTransformBegin
+						### [ z y x ] backwards coord system ! REMEMBER ! -1 3 -4 
+		LightSource "ambientlight" 	0 "intensity" [.5] "lightcolor" [1 1 1]
+		TransformBegin
+			Rotate 180 0 0 1
+			Rotate 45 1 0 0
+			LightSource "shadowSpot" 1 
+						"intensity" [50] 
+						"string shadowname" ["textures/distMap.shad"] 
+						"from" [0 -8 8] 
+						"float blur" [0.02] 
+						"float bias" [0.01]
+		TransformEnd
+		
+		TransformBegin
+			Rotate 180 0 0 1
+			LightSource "shadowSpot" 2 
+						"intensity" [15] 
+						"string shadowname" ["textures/ohSpotMap.shad"] 
+						"from" [0 -8 0] 
+						"coneangle" [0.4] 
+						"float blur" [0.05] 
+						"float bias" [0.05]
+		TransformEnd
+	TransformEnd#LightTransformEnd
+	
+	AttributeBegin #Orange
+		#Rotate 180 0 1 0
+		AttributeBegin #OrangeSphere
+			Attribute "displacementbound" "sphere" [.1] "coordinatesystem" ["world"]
+			Color [1 .2 0] 
+			Surface "oSkinDiff"  
+					"float roughness" 0.5 
+					"float Ka" .5 
+					"float Kd" 3 
+					"float Ks" .01 
+					"float Kr" .2 
+					"color specularcolor" [1.0 0.2 0.0]
+			#Surface "reflect"
+			Displacement "dispPlz" "string textureName" ["textures/orange.tx"]  
+						 "string dispSpace" ["shader"]
+						"float trueDisp" 1 "float Km" 0.025
+						 "float sstart" 0 "float sscale" 1.05
+						 "float tstart" 0 "float tscale" 1.1
+						 "float blur" 0
+			Sphere 1 -1 1 360
+		AttributeEnd #OrangeSphere		
+		
+		AttributeBegin #The stem 
+			Translate 0 -.01 0
+			AttributeBegin #Orange Stem
+				Color[ 0.31 0.31 .18 ]
+				Surface  "basic"
+				Rotate 90 1 0 0
+				Translate 0 0 -1
+				Cylinder 	0.05 -.1 .1 360
+			AttributeEnd #Orange Stem
+			AttributeBegin #stem top
+				Color[1 .77 .45]
+				Rotate 90 1 0 0
+				Translate 0 0 -1.20
+				Disk		0.1 -.051 360
+			AttributeEnd #stem top
+			AttributeBegin #stem base
+				Color[ 0.31 0.31 .18 ]
+				Surface  "basic"
+				Rotate -90 1 0 0
+				Translate 0 0 1.0
+				Scale 1 1 .5
+				Torus  .05 .05 0 360 360 # bottom
+				
+				Color [.33 .42 .18]
+				Surface  "basic"
+				Translate 0 0 .04
+				Scale .8 .8 .5
+				Torus  .05 .05 0 360 360 #top
+			AttributeEnd #stem base
+		AttributeEnd  #The Stem	
+	AttributeEnd #Orange
+	
+	AttributeBegin #table surface
+	Surface "oak" "float divotdepth" [0.0075] 
+				  "color Clightwood" [0.5300 0.2439 0.1171] 
+				  "color Cdarkwood" [0.4431 0.1729 0.0531]
+				  "float truedisp" 1 
+				  "float Ks" 0.1 
+				  "float Kr" 0.1
+	Scale 3 0.2 3
+	Translate 0 -6 -1
+		Patch "bilinear" "P" [ -1 1 0  1 1 0  -1 -1 0  1 -1 0 ]
+		Patch "bilinear" "P" [ -1 -1 2  1 -1 2  -1 1 2  1 1 2]
+		Patch "bilinear" "P" [ -1 -1 0  1 -1 0   -1 -1 2  1 -1 2]
+		Patch "bilinear" "P" [ -1 1 2  1 1 2  -1 1 0  1 1 0 ]
+		Patch "bilinear" "P" [ -1 -1 2  -1 1 2  -1 -1 0  -1 1 0 ]
+		Patch "bilinear" "P" [ 1 -1 0  1 1 0  1 -1 2  1 1 2]
+	
+	AttributeEnd # table surface
+	
+	
+	AttributeBegin# env map sphere
+		Translate 25 0 0
+		Rotate 90 1 0 0
+		Rotate -290 0 0 1
+		Surface "envMap" "string mapname" ["textures/envMap.tx"]
+		Sphere 100 -100 100 360
+	
+	AttributeEnd #env map sphere
+
+WorldEnd

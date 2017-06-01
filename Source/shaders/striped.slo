@@ -1,0 +1,57 @@
+shader_obj 5.0 1 0
+striped 20 3 12 4 9 0 1 1 0 1 13 1
+9 134
+rgb
+current
+D:/Dropbox/Dropbox/EngD/Year One/Rendering & Shading
+.:
+shaders/stripe.sl
+surface
+
+$meta_2004
+$meta___PRMAN_RELEASE__2004
+3
+5
+1
+2
+0
+20
+$meta___PRMAN_RELEASE__ 6 2 -1 7 3 0 0 0 0 0 0
+$meta___PRMAN_RELEASE_TAG__ 6 2 -1 8 3 0 0 0 0 0 0
+$S0 6 2 -1 0 3 0 0 0 0 0 0
+$S2 6 2 -1 1 3 0 0 0 0 0 0
+$srcDir 6 2 -1 2 3 0 0 0 0 0 0
+$includePath 6 2 -1 3 3 0 0 0 0 0 0
+$S7 6 2 -1 4 3 0 0 0 0 1 9
+$C0 4 2 -1 0 3 0 0 0 0 1 1
+$C1 4 2 -1 1 3 0 0 0 0 3 3
+$C2 4 2 -1 2 3 0 0 0 0 7 7
+$S9 6 2 -1 5 3 0 0 2 2 0 0
+$S10 6 2 -1 6 3 0 0 9 9 0 0
+repCount 4 5 -1 12 3 1 1 1 1 5 5
+$result_surface 0 15 -1 0 3 0 0 0 0 0 0
+Cs 3 10 0 0 2 0 0 0 0 4 4
+s 4 10 -1 0 2 0 0 0 0 5 5
+$2_Ct 3 3 0 0 2 0 0 3 8 0 0
+$2_whichStripe 4 3 -1 0 2 0 0 6 6 7 7
+surface 13 8 -1 0 2 1 13 0 0 1 9
+$T0 4 4 -1 0 2 0 0 5 7 6 8
+18
+12 7 
+10 
+16 8 
+16 14 
+19 15 12 
+17 19 
+19 17 9 
+16 19 
+11 
+_assign 	2 0  4 1 0
+_enterproc 	1 2  4 1 1
+_assign 	2 3  4 3 2
+_assign 	2 5  4 4 2
+_multiply 	3 7  4 5 2
+floor		2 10  4 5 2
+mod		3 12  4 6 2
+_assign 	2 15  4 6 2
+_enterproc 	1 17  4 1 1

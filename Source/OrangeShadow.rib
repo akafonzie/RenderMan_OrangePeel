@@ -1,0 +1,71 @@
+#OrangeShadow.rib
+Display "oShadow.tiff" "zfile" "z"
+#Display "oShadow" "it" "rgba"
+Format 1280 720 1.0
+Clipping .1 1000
+Projection "perspective" "float fov" 20						#The projection type and field of view
+ConcatTransform[1 0 0 0 					
+				0 0 1 0 	
+				0 1 0 0
+				0 0 0 1] 									#The camera location
+
+#Rotate 180 0 0 1 #overhead pointlight2 
+#Translate 0 -8 0#overhead pointlight2 
+
+Translate 0 20 -1											#Translate camera
+Rotate 90 1 0 0												#Rotate camera
+Rotate 90 0 1 0												#Rotate camera
+Rotate 15 0 0 1		
+#Rotate 180 0 0 1 #distantlight
+#Rotate 45 1 0 0	# distantlight	
+#Translate 0 -8 8 #distantlight
+
+
+WorldBegin
+					### [ z y x ] backwards coord system ! REMEMBER !
+	#LightSource "ambientlight" 	0 "intensity" [5] "lightcolor" [1 1 1]
+	#LightSource "distantlight" 	1 "intensity" [.5] "lightcolor" [1 1 1] "from" [-1 3 -4] "to" [0 0 0]
+	#LightSource "pointlight" 	2 "intensity" [1] "lightcolor" [1 1 1] "from" [-2 2 2]	
+	#LightSource "shadowSpot"    3 "intensity" [4]
+	AttributeBegin #Orange
+		#Rotate 180 0 1 0
+		AttributeBegin #OrangeSphere
+			Sphere 1 -1 1 360
+		AttributeEnd #OrangeSphere		
+		
+		AttributeBegin #The stem 
+			Translate 0 -.01 0
+			AttributeBegin #Orange Stem
+				Rotate 90 1 0 0
+				Translate 0 0 -1
+				Cylinder 	0.05 -.1 .1 360
+			AttributeEnd #Orange Stem
+			AttributeBegin #stem top
+				Rotate 90 1 0 0
+				Translate 0 0 -1.20
+				Disk		0.1 -.051 360
+			AttributeEnd #stem top
+			AttributeBegin #stem base
+				Rotate -90 1 0 0
+				Translate 0 0 1.0
+				Scale 1 1 .5
+				Torus  .05 .05 0 360 360 # bottom
+				Translate 0 0 .04
+				Scale .8 .8 .5
+				Torus  .05 .05 0 360 360 #top
+			AttributeEnd #stem base
+		AttributeEnd  #The Stem	
+	AttributeEnd #Orange
+	#AttributeBegin #table surface
+	#Scale 3 0.2 3
+	#Translate 0 -6 -1
+	#	Patch "bilinear" "P" [ -1 1 0  1 1 0  -1 -1 0  1 -1 0 ]
+	#	Patch "bilinear" "P" [ -1 -1 2  1 -1 2  -1 1 2  1 1 2]
+	#	Patch "bilinear" "P" [ -1 -1 0  1 -1 0   -1 -1 2  1 -1 2]
+	#	Patch "bilinear" "P" [ -1 1 2  1 1 2  -1 1 0  1 1 0 ]
+	#	Patch "bilinear" "P" [ -1 -1 2  -1 1 2  -1 -1 0  -1 1 0 ]
+	#	Patch "bilinear" "P" [ 1 -1 0  1 1 0  1 -1 2  1 1 2]
+	#
+	#AttributeEnd # table surface
+WorldEnd
+MakeShadow "oShadow.tiff" "distMap.shad"
